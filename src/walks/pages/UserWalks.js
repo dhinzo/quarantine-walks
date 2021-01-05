@@ -1,4 +1,5 @@
 import React from 'react'
+import { useParams} from 'react-router-dom'
 
 import WalkList from '../components/WalkList'
 
@@ -30,9 +31,10 @@ const DUMMY_DATA = [
 ]
 
 const UserWalks = () => {
+    const userId = useParams().userId
+    const loadedWalks = DUMMY_DATA.filter(walk => walk.creator === userId)
 
-
-    return <WalkList items={DUMMY_DATA} />
+    return <WalkList items={loadedWalks} />
 }
 
 export default UserWalks

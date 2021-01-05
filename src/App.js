@@ -15,7 +15,7 @@ const App = () => {
           <Route path="/" exact>
             <Users />
           </Route>
-          <Route path="/:id/walks" exact>
+          <Route path="/:userId/walks" exact>
             <UserWalks />
           </Route>
           <Route path="/walks/new" exact>
