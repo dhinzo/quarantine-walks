@@ -1,0 +1,55 @@
+.walk-item {
+  margin: 1rem 0;
+}
+
+.walk-item__content {
+  padding: 0;
+}
+
+.walk-item__info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.walk-item__image {
+  width: 100%;
+  height: 12.5rem;
+  margin-right: 1.5rem;
+}
+
+.walk-item__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.walk-item__info h2,
+.walk-item__info h3,
+.walk-item__info p {
+  margin: 0 0 0.5rem 0;
+}
+
+.walk-item__actions {
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid #ccc;
+}
+
+.walk-item__modal-content {
+  padding: 0;
+}
+
+.walk-item__modal-actions {
+  text-align: right;
+}
+
+.walk-item__actions button,
+.walk-item__actions a {
+  margin: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .walk-item__image {
+    height: 20rem;
+  } 
+}
