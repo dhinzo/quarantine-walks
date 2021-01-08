@@ -1,7 +1,12 @@
 import React from 'react'
 
+import Input from '../../shared/components/FormElements/Input'
+import './NewWalk.css'
+
 const NewWalk = () => {
-    return <h2>New Walks works!</h2>
+    return <form className="place-form">
+        <Input element="input" type="text" label="Title" /> 
+    </form>
 }
 
 export default NewWalk
