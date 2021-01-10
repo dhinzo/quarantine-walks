@@ -8,10 +8,23 @@ import './WalkItem.css'
 
 const WalkItem = props => {
     const [showMap, setShowMap] = useState(false)
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
 
     const openMapHandler = () => setShowMap(true)
     const closeMapHandler = () => setShowMap(false)
 
+    const showDeleteWarningHandler = () => {
+        setShowConfirmModal(true)
+    }
+
+    const cancelDeleteHandler = () => {
+        setShowConfirmModal(false)
+    }
+
+    const confirmDeleteHandler = () => {
+        setShowConfirmModal(false)
+        console.log('Deleting...')
+    }
 
     return (
         <React.Fragment>
@@ -27,6 +40,19 @@ const WalkItem = props => {
                     <Map center={props.coordinates} zoom={16} />
                 </div>
             </Modal>
+            <Modal
+                show={showConfirmModal}
+                onCancel={cancelDeleteHandler}
+                header="Sure about that?" 
+                footerClass="walk-item__modal-actions" 
+                footer={
+                    <React.Fragment>
+                        <Button inverse onClick={cancelDeleteHandler}>CANCEL</Button>
+                        <Button danger onClick={confirmDeleteHandler}>DELETE</Button>
+                    </React.Fragment>
+                }>
+                <p>Are you sure you want to delete this walk? This can't be undone.</p>
+            </Modal>
         <li className="walk-item">
             <Card className="walk-item__content">
             <div className="walk-item__image">
@@ -40,7 +66,7 @@ const WalkItem = props => {
             <div className="walk-item__actions">
                 <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
                 <Button to={`/walks/${props.id}`}>EDIT</Button>
-                <Button danger>DELETE</Button>
+                <Button danger onClick={showDeleteWarningHandler}>DELETE</Button>
             </div> 
             </Card>
         </li>

@@ -6,6 +6,7 @@ import Users from './user/pages/Users'
 import UserWalks from './walks/pages/UserWalks'
 import NewWalk from './walks/pages/NewWalk'
 import UpdateWalk from './walks/pages/UpdateWalk'
+import Auth from './user/pages/Auth'
 
 const App = () => {
   return (
@@ -24,6 +25,9 @@ const App = () => {
           </Route>
           <Route path="/walks/:walkId">
             <UpdateWalk />
+          </Route>
+          <Route path='/auth'>
+            <Auth />
           </Route>
           <Redirect to="/" />
         </Switch>
