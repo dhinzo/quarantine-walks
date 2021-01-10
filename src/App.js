@@ -5,6 +5,7 @@ import MainNav from './shared/components/Navigation/MainNav'
 import Users from './user/pages/Users'
 import UserWalks from './walks/pages/UserWalks'
 import NewWalk from './walks/pages/NewWalk'
+import UpdateWalk from './walks/pages/UpdateWalk'
 
 const App = () => {
   return (
@@ -20,6 +21,9 @@ const App = () => {
           </Route>
           <Route path="/walks/new" exact>
             <NewWalk />
+          </Route>
+          <Route path="/walks/:walkId">
+            <UpdateWalk />
           </Route>
           <Redirect to="/" />
         </Switch>

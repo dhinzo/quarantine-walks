@@ -2,6 +2,7 @@ import React from 'react'
 
 import Card from '../../shared/components/UIElements/Card'
 import WalkItem from './WalkItem'
+import Button from '../../shared/components/FormElements/Button'
 import './WalkList.css'
 
 const WalkList = props => {
@@ -9,7 +10,7 @@ const WalkList = props => {
         return <div className="walk-list center">
             <Card>
                 <h2>No Walks found. Consider creating one!</h2>
-                <button>Share Walk</button>
+                <Button to="/walks/new" >Share Walk</Button>
             </Card>
         </div>
     }
