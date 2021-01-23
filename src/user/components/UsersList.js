@@ -15,8 +15,9 @@ const UsersList = props => {
             </div>
         )
     } 
-
+    console.log(props)
     return (
+        
     <ul className="users-list">
         {props.items.map(user => (
             <UserItem       
@@ -24,7 +25,7 @@ const UsersList = props => {
                 id={user.id}
                 image={user.image}
                 name={user.name}
-                walkCount={user.walks}
+                walkCount={user.walks.length}
             />
         ))}
     </ul>
