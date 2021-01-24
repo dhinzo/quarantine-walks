@@ -72,7 +72,7 @@ const WalkItem = props => {
             <Card className="walk-item__content">
             {isLoading && <LoadingSpinner asOverlay />}
             <div className="walk-item__image">
-                <img src={props.image} alt={props.title} />
+                <img src={`http://localhost:5000/${props.image}`} alt={props.title} />
             </div>
             <div className="walk-item__info">
                 <h2>{props.title}</h2>

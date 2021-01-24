@@ -15,7 +15,7 @@ const UsersList = props => {
             </div>
         )
     } 
-    console.log(props)
+    
     return (
         
     <ul className="users-list">
