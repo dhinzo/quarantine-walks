@@ -20,12 +20,13 @@ const WalkList = props => {
             <WalkItem 
                 key={walk.id} 
                 id={walk.id} 
-                image={walk.imageUrl} 
+                image={walk.image} 
                 title={walk.title} 
                 description={walk.description} 
                 address={walk.address} 
                 creatorId={walk.creator} 
-                coordinates={walk.location}            
+                coordinates={walk.location}
+                onDelete={props.onDeleteWalk}            
             />
         ))}
     </ul>

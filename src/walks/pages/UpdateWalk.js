@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState, useContext } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
 
 
 import Input from '../../shared/components/FormElements/Input'
@@ -7,39 +7,20 @@ import Button from '../../shared/components/FormElements/Button'
 import Card from '../../shared/components/UIElements/Card'
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/utils/validators'
 import { useForm } from '../../shared/hooks/form-hook'
+import { useHttpClient } from '../../shared/hooks/http-hook'
+import { AuthContext } from '../../shared/context/auth-context'
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import ErrorModal from '../../shared/components/UIElements/ErrorModal'
+
 import './WalkForm.css'
 
 
-const DUMMY_DATA = [
-    {
-        id: 'w1',
-        title: 'Lakeview Cemetery',
-        description: 'A beautiful cemetery to walk around. Rockefeller family is buried here!',
-        imageUrl: 'http://ianadamsphotography.com/news/wp-content/uploads/2015/11/Schofield-Mausoleum-Edit.jpg',
-        address: '12316 Euclid Avenue, Cleveland, Ohio 44106',
-        location: {
-            lat: 41.511623,
-            lng: -81.6015392
-        },
-        creator: 'u1'
-    },
-    {
-        id: 'w2',
-        title: 'Lakeview Cemetery',
-        description: 'A beautiful cemetery to walk around. Rockefeller family is buried here!',
-        imageUrl: 'http://ianadamsphotography.com/news/wp-content/uploads/2015/11/Schofield-Mausoleum-Edit.jpg',
-        address: '12316 Euclid Avenue, Cleveland, Ohio 44106',
-        location: {
-            lat: 41.511623,
-            lng: -81.6015392
-        },
-        creator: 'u2'
-    }
-]
-
 const UpdateWalk = () => {
-    const [isLoading, setIsLoading] = useState(true)
+    const auth = useContext(AuthContext)
+    const { isLoading, error, sendReq, clearError } = useHttpClient()
+    const [loadedWalk, setLoadedWalk] = useState()
     const walkId = useParams().walkId
+    const history = useHistory()
     
     
     const [formState, inputHandler, setFormData] = useForm({
@@ -55,34 +36,52 @@ const UpdateWalk = () => {
     false
 )
     
-
-
-    const walkToUpdate = DUMMY_DATA.find(w => w.id === walkId)
-
     useEffect(() => {
-        if (walkToUpdate) {
-            setFormData(
-                {
-                    title: {
-                        value: walkToUpdate.title,
-                        isValid: true
-                    },
-                    description: {
-                        value: walkToUpdate.description,
-                        isValid: true
-                    }
-                }, true
-            )
-        }        
-        setIsLoading(false)
-    }, [setFormData, walkToUpdate])
+        const fetchWalk = async () => {
+            try {
+                const responseData = await sendReq(`http://localhost:5000/api/walks/${walkId}`)
+                setLoadedWalk(responseData.walk)
+                setFormData(
+                    {
+                        title: {
+                            value: responseData.walk.title,
+                            isValid: true
+                        },
+                        description: {
+                            value: responseData.walk.description,
+                            isValid: true
+                        }
+                    }, true
+                )
+            } catch (err) {}
+        }
+        fetchWalk()
+    }, [sendReq, walkId, setFormData])
 
-    const walkUpdateSubmitHandler = e => {
+
+    const walkUpdateSubmitHandler = async e => {
         e.preventDefault()
-        console.log(formState.inputs)
+        try {
+            await sendReq(`http://localhost:5000/api/walks/${walkId}`, 'PATCH', JSON.stringify({
+                title: formState.inputs.title.value,
+                description: formState.inputs.description.value
+            }),
+            {
+                'Content-Type': 'application/json'
+            })
+            history.push(`/${auth.userId}/walks`)
+        } catch (err) {}
     }
 
-    if (!walkToUpdate) {
+    if (isLoading) {
+        return (
+            <div className="center">
+                <LoadingSpinner />
+            </div>
+        )
+    }
+
+    if (!loadedWalk && !error) {
         return (
             <div className="center">
             <Card>
@@ -92,16 +91,12 @@ const UpdateWalk = () => {
         )
     }
 
-    if (isLoading) {
-        return (
-            <div className="center">
-                <h2>Loading...</h2>
-            </div>
-        )
-    }
-
     return (
-        <form className="walk-form" onSubmit={walkUpdateSubmitHandler}>
+        <React.Fragment>
+        <ErrorModal error={error} onClear={clearError} />
+
+        {!isLoading && loadedWalk &&(
+            <form className="walk-form" onSubmit={walkUpdateSubmitHandler}>
             <Input            
                 id="title" 
                 element="input" 
@@ -110,8 +105,8 @@ const UpdateWalk = () => {
                 validators={[VALIDATOR_REQUIRE()]}
                 errorText="Please enter a valid title"
                 onInput={inputHandler}
-                initialValue={formState.inputs.title.value}
-                initialValid={formState.inputs.title.isValid} />
+                initialValue={loadedWalk.title}
+                initialValid={true} />
             <Input            
                 id="description" 
                 element="textarea" 
@@ -119,12 +114,13 @@ const UpdateWalk = () => {
                 validators={[VALIDATOR_MINLENGTH(5)]}
                 errorText="Please enter a valid description with a minimum of 5 characters."
                 onInput={inputHandler}
-                initialValue={formState.inputs.description.value}
-                initialValid={formState.inputs.description.isValid} />
+                initialValue={loadedWalk.description}
+                initialValid={true} />
             <Button type="submit" disabled={!formState.isValid}>
                 UPDATE WALK
             </Button>
-        </form>
+        </form>)}
+        </React.Fragment>
     )
 }
 

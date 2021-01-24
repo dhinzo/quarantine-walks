@@ -1,40 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams} from 'react-router-dom'
 
 import WalkList from '../components/WalkList'
+import ErrorModal from '../../shared/components/UIElements/ErrorModal'
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import { useHttpClient } from '../../shared/hooks/http-hook'
 
-const DUMMY_DATA = [
-    {
-        id: 'w1',
-        title: 'Lakeview Cemetery',
-        description: 'A beautiful cemetery to walk around. Rockefeller family is buried here!',
-        imageUrl: 'http://ianadamsphotography.com/news/wp-content/uploads/2015/11/Schofield-Mausoleum-Edit.jpg',
-        address: '12316 Euclid Avenue, Cleveland, Ohio 44106',
-        location: {
-            lat: 41.511623,
-            lng: -81.6015392
-        },
-        creator: 'u1'
-    },
-    {
-        id: 'w2',
-        title: 'Lakeview Cemetery',
-        description: 'A beautiful cemetery to walk around. Rockefeller family is buried here!',
-        imageUrl: 'http://ianadamsphotography.com/news/wp-content/uploads/2015/11/Schofield-Mausoleum-Edit.jpg',
-        address: '12316 Euclid Avenue, Cleveland, Ohio 44106',
-        location: {
-            lat: 41.511623,
-            lng: -81.6015392
-        },
-        creator: 'u2'
-    }
-]
 
 const UserWalks = () => {
-    const userId = useParams().userId
-    const loadedWalks = DUMMY_DATA.filter(walk => walk.creator === userId)
+    const [loadedWalks, setLoadedWalks] = useState()
+    const { isLoading, error, sendReq, clearError } = useHttpClient()
 
-    return <WalkList items={loadedWalks} />
+    const userId = useParams().userId
+
+    useEffect(() => {
+        const fetchWalks = async () => {
+            try {
+                const responseData = await sendReq(`http://localhost:5000/api/walks/user/${userId}`)
+                setLoadedWalks(responseData.walks)
+            } catch (err) {}
+        }
+        fetchWalks()
+    }, [sendReq, userId])
+
+    const walkDeleteHandler = (deletedWalkId) => {
+        setLoadedWalks(prevWalks => prevWalks.filter(walk => walk.id !== deletedWalkId)
+        )
+    }
+
+    return (
+    <React.Fragment>
+    <ErrorModal error={error} onClear={clearError} />
+    {isLoading && (
+        <div className='center'>
+            <LoadingSpinner />
+        </div>
+    )}
+        {!isLoading && loadedWalks && <WalkList items={loadedWalks} onDeleteWalk={walkDeleteHandler} />}
+    </React.Fragment>
+    )
 }
 
 export default UserWalks

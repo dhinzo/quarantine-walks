@@ -4,11 +4,17 @@ import Card from '../../shared/components/UIElements/Card'
 import Button from '../../shared/components/FormElements/Button'
 import Modal from '../../shared/components/UIElements/Modal'
 import Map from '../../shared/components/UIElements/Map'
+import ErrorModal from '../../shared/components/UIElements/ErrorModal'
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import { AuthContext } from '../../shared/context/auth-context'
+import { useHttpClient } from '../../shared/hooks/http-hook'
+
 import './WalkItem.css'
 
 const WalkItem = props => {
     const auth = useContext(AuthContext)
+    const { isLoading, error, sendReq, clearError } = useHttpClient()
+
     const [showMap, setShowMap] = useState(false)
     const [showConfirmModal, setShowConfirmModal] = useState(false)
 
@@ -23,13 +29,20 @@ const WalkItem = props => {
         setShowConfirmModal(false)
     }
 
-    const confirmDeleteHandler = () => {
+    const confirmDeleteHandler = async () => {
         setShowConfirmModal(false)
-        console.log('Deleting...')
+        try {
+            await sendReq(
+                `http://localhost:5000/api/walks/${props.id}`,
+                 'DELETE'
+            )
+            props.onDelete(props.id)
+        } catch (err) {} 
     }
 
     return (
         <React.Fragment>
+            <ErrorModal error={error} onClear={clearError} />
             <Modal 
                 show={showMap} 
                 onCancel={closeMapHandler} 
@@ -57,6 +70,7 @@ const WalkItem = props => {
             </Modal>
         <li className="walk-item">
             <Card className="walk-item__content">
+            {isLoading && <LoadingSpinner asOverlay />}
             <div className="walk-item__image">
                 <img src={props.image} alt={props.title} />
             </div>
@@ -67,7 +81,7 @@ const WalkItem = props => {
             </div>
             <div className="walk-item__actions">
                 <Button inverse onClick={openMapHandler}>VIEW ON MAP</Button>
-                {auth.isLoggedIn &&
+                {auth.userId === props.creatorId &&
                 <React.Fragment>
                 <Button to={`/walks/${props.id}`}>EDIT</Button>
                 <Button danger onClick={showDeleteWarningHandler}>DELETE</Button>
