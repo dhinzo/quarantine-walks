@@ -34,7 +34,11 @@ const WalkItem = props => {
         try {
             await sendReq(
                 `http://localhost:5000/api/walks/${props.id}`,
-                 'DELETE'
+                'DELETE',
+                null,
+                {
+                    Authorization: 'Bearer ' + auth.token
+                }
             )
             props.onDelete(props.id)
         } catch (err) {} 

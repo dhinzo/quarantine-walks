@@ -56,7 +56,10 @@ const NewWalk = () => {
             await sendReq(
                 'http://localhost:5000/api/walks', 
                 'POST',
-                formData
+                formData,
+                {
+                    Authorization: 'Bearer ' + auth.token
+                }
             )  
             history.push('/')  
         } catch (err) {}
