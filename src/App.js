@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 
 import MainNav from './shared/components/Navigation/MainNav'
-import Users from './user/pages/Users'
-import UserWalks from './walks/pages/UserWalks'
-import NewWalk from './walks/pages/NewWalk'
-import UpdateWalk from './walks/pages/UpdateWalk'
-import Auth from './user/pages/Auth'
+import LoadingSpinner from './shared/components/UIElements/LoadingSpinner'
+// import Users from './user/pages/Users'
+// import UserWalks from './walks/pages/UserWalks'
+// import NewWalk from './walks/pages/NewWalk'
+// import UpdateWalk from './walks/pages/UpdateWalk'
+// import Auth from './user/pages/Auth'
 import { AuthContext } from './shared/context/auth-context'
 import { useAuth } from './shared/hooks/auth-hook'
+
+
+// Splitting code
+const Users = React.lazy(() => import('./user/pages/Users'))
+const UserWalks = React.lazy(() => import('./walks/pages/UserWalks'))
+const NewWalk = React.lazy(() => import('./walks/pages/NewWalk'))
+const UpdateWalk = React.lazy(() => import('./walks/pages/UpdateWalk'))
+const Auth = React.lazy(() => import('./user/pages/Auth'))
 
 
 const App = () => {
@@ -65,7 +74,13 @@ const App = () => {
     >
     <Router>
       <MainNav />
-      <main>{routes}</main>
+      <main><Suspense fallback={
+      <div className="center">
+      <LoadingSpinner />
+      </div>
+      }
+      >
+      {routes}</Suspense></main>
     </Router>
     </AuthContext.Provider>
   )

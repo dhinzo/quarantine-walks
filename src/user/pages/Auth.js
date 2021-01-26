@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 
-import { VALIDATOR_EMAIL, VALIDATOR_MIN, VALIDATOR_REQUIRE } from '../../shared/utils/validators'
+import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../shared/utils/validators'
 import Card from '../../shared/components/UIElements/Card'
 import Input from '../../shared/components/FormElements/Input'
 import Button from '../../shared/components/FormElements/Button'
@@ -135,7 +135,7 @@ const authSubmitHandler = async e => {
                 element="input"
                 type="password"
                 label="Password"
-                validators={[VALIDATOR_MIN(8)]}
+                validators={[VALIDATOR_MINLENGTH(8)]}
                 errorText="Please enter a valid password with at least 8 characters"
                 onInput={inputHandler} />
             <Button type="submit" disabled={!formState.isValid}>
