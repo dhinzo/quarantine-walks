@@ -39,7 +39,7 @@ const UpdateWalk = () => {
     useEffect(() => {
         const fetchWalk = async () => {
             try {
-                const responseData = await sendReq(`http://localhost:5000/api/walks/${walkId}`)
+                const responseData = await sendReq(process.env.REACT_APP_BACKEND_URL + `/walks/${walkId}`)
                 setLoadedWalk(responseData.walk)
                 setFormData(
                     {
@@ -62,7 +62,7 @@ const UpdateWalk = () => {
     const walkUpdateSubmitHandler = async e => {
         e.preventDefault()
         try {
-            await sendReq(`http://localhost:5000/api/walks/${walkId}`, 'PATCH', JSON.stringify({
+            await sendReq(process.env.REACT_APP_BACKEND_URL + `/walks/${walkId}`, 'PATCH', JSON.stringify({
                 title: formState.inputs.title.value,
                 description: formState.inputs.description.value
             }),

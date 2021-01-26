@@ -50,11 +50,10 @@ const NewWalk = () => {
             formData.append('title', formState.inputs.title.value)
             formData.append('description', formState.inputs.description.value)
             formData.append('address', formState.inputs.address.value)
-            formData.append('creator', auth.userId)
             formData.append('image', formState.inputs.image.value)
 
             await sendReq(
-                'http://localhost:5000/api/walks', 
+                process.env.REACT_APP_BACKEND_URL + '/walks', 
                 'POST',
                 formData,
                 {

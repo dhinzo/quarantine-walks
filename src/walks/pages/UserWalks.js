@@ -16,7 +16,7 @@ const UserWalks = () => {
     useEffect(() => {
         const fetchWalks = async () => {
             try {
-                const responseData = await sendReq(`http://localhost:5000/api/walks/user/${userId}`)
+                const responseData = await sendReq(process.env.REACT_APP_BACKEND_URL + `/walks/user/${userId}`)
                 setLoadedWalks(responseData.walks)
             } catch (err) {}
         }
