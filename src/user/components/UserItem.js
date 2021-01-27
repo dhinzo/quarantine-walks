@@ -17,7 +17,7 @@ const UserItem = props => {
                 <div className="user-item__info">
                     <h2>{props.name}</h2>
                     <h3>
-                        {props.walkCount} {props.walkCount === 1 ? 'Walk' : 'Walks'}
+                        {props.walkCount} {props.walkCount === 1 ? 'walk recorded' : 'walks recorded'}
                     </h3>
                 </div>
             </Link> 

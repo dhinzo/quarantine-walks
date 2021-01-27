@@ -1,7 +1,7 @@
 .user-item {
     margin: 1rem;
     width: calc(45% - 2rem);
-    min-width: 17.5rem;
+    min-width: 18rem;
   }
   
   .user-item a {
@@ -12,12 +12,12 @@
     text-decoration: none;
     padding: 1rem;
     color: white;
-    background: #495867;
+    background: #3891a6;
   }
   
   .user-item a:hover,
   .user-item a:active {
-    background: #BDD5EA;
+    background: #5640c7;
   }
   
   .user-item__content {
@@ -41,7 +41,7 @@
   .user-item:active h2,
   .user-item:hover h3,
   .user-item:active h3 {
-    color: #292929;
+    color: white;
   }
   
   .user-item__info h3 {
