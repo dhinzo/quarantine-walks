@@ -76,7 +76,7 @@ const WalkItem = props => {
             <Card className="walk-item__content">
             {isLoading && <LoadingSpinner asOverlay />}
             <div className="walk-item__image">
-                <img src={process.env.REACT_APP_ASSET_URL + `/${props.image}`} alt={props.title} />
+                <img src={props.image} alt={props.title} />
             </div>
             <div className="walk-item__info">
                 <h2>{props.title}</h2>
